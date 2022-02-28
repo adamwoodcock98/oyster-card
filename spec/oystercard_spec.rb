@@ -36,13 +36,19 @@ describe Oystercard do
 
   context 'touch in / touch out support tests' do
 
-    it 'should have an instance variale, in_use' do
+    it 'should have an instance variable, in_use' do
       expect(subject.in_use).to eq false
     end
 
-    it 'should be able to touch in and change in use to true' do
+    it 'should be able to touch in and change in_use to true' do
       subject.touch_in
-      expect(subject.in_use).to eq true
+      expect(subject).to be_in_journey
+    end
+
+    it 'should be able to touch and change in_use to false' do
+      subject.touch_in
+      subject.touch_out
+      expect(subject).to_not be_in_journey
     end
 
   end
