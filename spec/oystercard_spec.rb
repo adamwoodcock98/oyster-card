@@ -14,7 +14,7 @@ describe Oystercard do
 
     it 'should increase balance by specified amount' do 
       subject.top_up(10)
-      expect(subject.balance).to eq(10) #balance is returnd, this is what we are testing
+      expect(subject.balance).to eq(10) #balance is returned, this is what we are testing
     end
 
     it 'should raise error if balance would exceed £90' do
@@ -31,5 +31,19 @@ describe Oystercard do
       subject.deduct(5)
       expect(subject.balance).to eq(5)
     end
+
+  end
+
+  context 'touch in / touch out support tests' do
+
+    it 'should have an instance variale, in_use' do
+      expect(subject.in_use).to eq false
+    end
+
+    it 'should be able to touch in and change in use to true' do
+      subject.touch_in
+      expect(subject.in_use).to eq true
+    end
+
   end
 end

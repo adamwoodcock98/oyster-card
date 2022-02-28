@@ -1,10 +1,12 @@
 class Oystercard
   attr_reader :balance
+  attr_accessor :in_use
   LIMIT = 90
   EXCEEDS_MESSAGE = "Denied. Balance would exceed #{LIMIT}"
 
   def initialize
     @balance = 0
+    @in_use = false
   end
 
   def top_up(amount)
@@ -18,5 +20,9 @@ class Oystercard
 
   def deduct(amount)
     @balance -= amount
+  end
+
+  def touch_in
+    @in_use = true
   end
 end
