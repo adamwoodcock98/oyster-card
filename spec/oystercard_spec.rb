@@ -14,4 +14,10 @@ describe Oystercard do
     subject.top_up(10)
     expect(subject.balance).to eq(10) #balance is returnd, this is what we are testing
   end
+
+  it 'should raise error if balance would exceed £90' do
+    subject.top_up(Oystercard::LIMIT)
+    expect { subject.top_up(1) }.to raise_error "Denied. Balance would exceed #{Oystercard::LIMIT}"
+  end
+
 end
