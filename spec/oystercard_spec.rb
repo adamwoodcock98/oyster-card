@@ -26,34 +26,43 @@ describe Oystercard do
 
   context 'touch in / touch out support tests' do
     
+    let(:entry_station_double) { double :entry_station_double }
+
     before do
       @card = Oystercard.new
       @card.top_up(Oystercard::MINIMUM_FARE)
     end
-
-    it 'should have an instance variable, in_use' do
-      expect(subject.in_use).to eq false
-    end
-
+    
     it 'should be able to touch in and change in_use to true' do
-      @card.touch_in
+      @card.touch_in(entry_station_double)
       expect(@card).to be_in_journey
     end
 
     it 'should be able to touch and change in_use to false' do
-      @card.touch_in
+      @card.touch_in(entry_station_double)
       @card.touch_out
       expect(@card).to_not be_in_journey
     end
-
+    
     it 'should raise an error when card does not have enough for minimum fare(1)' do      
-      expect { subject.touch_in }.to raise_error('insufficient funds')
+      expect { subject.touch_in(entry_station_double) }.to raise_error('insufficient funds')
     end
 
     it 'should change the balance by the minimum fare after touching out' do
       expect { @card.touch_out }.to change { @card.balance }.by(-Oystercard::MINIMUM_FARE)
     end
-  end
 
+    it 'should remember the entry station after touching in' do 
+      @card.touch_in(entry_station_double)
+      expect(@card.entry_station).to eq(entry_station_double)
+    end
+
+    it 'should remove the entry station after touching out' do 
+      @card.touch_in(entry_station_double)
+      @card.touch_out
+      expect(@card.entry_station).to eq(nil)
+    end
+
+  end
 
 end
