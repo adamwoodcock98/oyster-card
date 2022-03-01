@@ -22,16 +22,6 @@ describe Oystercard do
       expect { subject.top_up(1) }.to raise_error Oystercard::EXCEEDS_MESSAGE
     end
 
-    it 'should have a deduct method that takes one argument' do 
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
-
-    it 'should deduct the fare from my balance' do 
-      subject.top_up(10)
-      subject.deduct(5)
-      expect(subject.balance).to eq(5)
-    end
-
   end
 
   context 'touch in / touch out support tests' do
@@ -58,6 +48,10 @@ describe Oystercard do
 
     it 'should raise an error when card does not have enough for minimum fare(1)' do      
       expect { subject.touch_in }.to raise_error('insufficient funds')
+    end
+
+    it 'should change the balance by the minimum fare after touching out' do
+      expect { @card.touch_out }.to change { @card.balance }.by(-Oystercard::MINIMUM_FARE)
     end
   end
 
