@@ -3,6 +3,7 @@ class Oystercard
   attr_accessor :in_use
   LIMIT = 90
   EXCEEDS_MESSAGE = "Denied. Balance would exceed #{LIMIT}"
+  MINIMUM_FARE = 1
 
   def initialize
     @balance = 0
@@ -23,6 +24,7 @@ class Oystercard
   end
 
   def touch_in
+    raise 'insufficient funds' if @balance < MINIMUM_FARE
     @in_use = true
   end
 

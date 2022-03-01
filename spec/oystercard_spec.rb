@@ -35,21 +35,31 @@ describe Oystercard do
   end
 
   context 'touch in / touch out support tests' do
+    
+    before do
+      @card = Oystercard.new
+      @card.top_up(Oystercard::MINIMUM_FARE)
+    end
 
     it 'should have an instance variable, in_use' do
       expect(subject.in_use).to eq false
     end
 
     it 'should be able to touch in and change in_use to true' do
-      subject.touch_in
-      expect(subject).to be_in_journey
+      @card.touch_in
+      expect(@card).to be_in_journey
     end
 
     it 'should be able to touch and change in_use to false' do
-      subject.touch_in
-      subject.touch_out
-      expect(subject).to_not be_in_journey
+      @card.touch_in
+      @card.touch_out
+      expect(@card).to_not be_in_journey
     end
 
+    it 'should raise an error when card does not have enough for minimum fare(1)' do      
+      expect { subject.touch_in }.to raise_error('insufficient funds')
+    end
   end
+
+
 end
