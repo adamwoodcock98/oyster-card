@@ -1,8 +1,10 @@
+require_relative 'journey'
+
 class Oystercard
   
   attr_reader :balance
-  attr_reader :entry_station
   attr_reader :all_journeys
+  attr_accessor :current_journey
   LIMIT = 90
   EXCEEDS_MESSAGE = "Denied. Balance would exceed #{LIMIT}"
   MINIMUM_FARE = 1
@@ -23,17 +25,19 @@ class Oystercard
 
   def touch_in(station)
     raise 'insufficient funds' if @balance < MINIMUM_FARE
-    @entry_station = station
+    @current_journey = Journey.new
+    @current_journey.start_journey(station)
   end
 
   def touch_out(station)
-    deduct(MINIMUM_FARE)
-    store_journey(@entry_station, station)
-    @entry_station = nil
+    @current_journey = Journey.new if current_journey == nil
+    @current_journey.end_journey(station)
+    deduct(@current_journey.calculate_fare_or_penalty)
+    store_journey
   end
 
   def in_journey?
-    @entry_station != nil
+    @current_journey != nil
   end
 
   private
@@ -42,12 +46,9 @@ class Oystercard
     @balance -= amount
   end
 
-  def store_journey(entry_station, exit_station)
-    journey_hash = {
-      :entry_station => entry_station,
-      :exit_station => exit_station
-    }
-    @all_journeys << journey_hash
+  def store_journey
+    @all_journeys << @current_journey
+    @current_journey = nil
   end
 
 end
