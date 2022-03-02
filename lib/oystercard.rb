@@ -1,4 +1,5 @@
 class Oystercard
+  
   attr_reader :balance
   attr_reader :entry_station
   attr_reader :all_journeys
